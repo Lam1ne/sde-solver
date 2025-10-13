@@ -1,6 +1,0 @@
-﻿# Python packages needed for Euler-Maruyama project
-# Math 425 - Numerical Methods for Stochastic Processes
-# Fall 2025
-
-numpy>=1.20.0
-matplotlib>=3.3.0

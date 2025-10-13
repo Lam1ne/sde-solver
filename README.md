@@ -8,13 +8,13 @@ Currently implements the **Euler-Maruyama scheme** with plans to add Milstein me
 
 The Euler-Maruyama scheme is a numerical method for solving SDEs of the form:
 
-```
+```math
 dX(t) = a(X(t), t) dt + b(X(t), t) dW(t)
 ```
 
 where:
-- **a(X, t)** is the drift term 
-- **b(X, t)** is the diffusion term 
+- **a(X, t)** is the drift term
+- **b(X, t)** is the diffusion term
 - **W(t)** is a standard Brownian motion (Wiener process)
 
 It's basically the stochastic version of Euler's method
@@ -23,7 +23,7 @@ It's basically the stochastic version of Euler's method
 
 The Euler-Maruyama discretization:
 
-```
+```math
 X_{n+1} = X_n + a(X_n, t_n) Δt + b(X_n, t_n) ΔW_n
 ```
 
@@ -33,7 +33,7 @@ where Δt is the time step and ΔW_n ~ N(0, Δt) are Brownian increments
 
 ```
 sde-solver/
-├── src/
+├── src/sde-solver
 │   ├── euler_maruyama.py    # Main solver implementation
 │   └── milstein.py          # Milstein scheme (TODO)
 ├── examples/
@@ -42,14 +42,23 @@ sde-solver/
 ├── tests/
 │   └── test_euler_maruyama.py
 ├── run_all.py               # Run all examples
-└── requirements.txt
+└── pyproject.toml
 ```
 
 ## Installation
 
+In order to run examples and tests, simply use [uv](https://docs.astral.sh/uv/).
+
+It can be installed using:
 ```bash
-pip install -r requirements.txt
+pipx install uv
 ```
+
+To install the `sde-solver` package, use:
+```bash
+pip install .
+```
+
 
 ## Usage
 
@@ -57,27 +66,27 @@ pip install -r requirements.txt
 
 Run all examples at once:
 ```bash
-python run_all.py
+uv run run_all.py
 ```
 
 ### Individual Examples
 
 Black-Scholes stock price model:
 ```bash
-python examples/black_scholes.py
+uv run examples/black_scholes.py
 ```
 
 Interest rate model:
 ```bash
-python examples/interest_rates.py
+uv run examples/interest_rates.py
 ```
 
 ### Using in Your Code
 
 ```python
-from src.euler_maruyama import euler_maruyama
+from sde_solver.euler_maruyama import euler_maruyama
 
-# Define drift and diffusion 
+# Define drift and diffusion
 def drift(X, t):
     return mu * X
 
@@ -91,7 +100,7 @@ t, X = euler_maruyama(X0=1.0, a=drift, b=diffusion, T=1.0, N=1000, M=5)
 ### Run Tests
 
 ```bash
-python tests/test_euler_maruyama.py
+uv run pytest
 ```
 
 ## Examples Included
@@ -114,16 +123,16 @@ Testing convergence rate O(√Δt)
 ## Results
 
 The program makes three plots:
-- geometric_brownian_motion.png 
-- ornstein_uhlenbeck_process.png 
-- euler_maruyama_convergence.png 
+- geometric_brownian_motion.png
+- ornstein_uhlenbeck_process.png
+- euler_maruyama_convergence.png
 
 ## Theory
 
 ### Convergence
 Euler-Maruyama has:
-- **Strong convergence**: order 0.5 
-- **Weak convergence**: order 1.0 
+- **Strong convergence**: order 0.5
+- **Weak convergence**: order 1.0
 
 Tested in example 3
 
@@ -147,7 +156,7 @@ euler_maruyama(X0, a, b, T, N, M=1)
 
 ## References
 
-- Kloeden & Platen - "Numerical Solution of Stochastic Differential Equations with Jumps in Finance" 
+- Kloeden & Platen - "Numerical Solution of Stochastic Differential Equations with Jumps in Finance"
 - Wikipedia article on the Euler-Maruyama method
 
 
