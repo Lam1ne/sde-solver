@@ -79,11 +79,13 @@ if __name__ == "__main__":
     # Import and run examples
     from examples.black_scholes import run_black_scholes_simulation
     from examples.interest_rates import run_interest_rate_model
-
+    from examples.milstein_test import run_milstein_comparison
+    
     run_black_scholes_simulation()
     run_interest_rate_model()
     example_convergence()
-
+    run_milstein_comparison()
+    
     print("\n" + "=" * 60)
     print("Done! Check the plots")
     print("=" * 60 + "\n")

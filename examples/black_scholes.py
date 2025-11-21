@@ -31,6 +31,8 @@ def run_black_scholes_simulation():
     T = 1.0
     N = 1000
     M = 5
+    
+    # TODO: maybe load parameters from a config file later?
 
     # drift and diffusion functions
     def drift(S, t):

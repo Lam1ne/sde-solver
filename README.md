@@ -1,163 +1,72 @@
-﻿# SDE Solver
+﻿# SDE Solver Project
 
-My implementation of numerical methods for solving Stochastic Differential Equations (SDEs).
+This is my implementation of numerical methods for Stochastic Differential Equations (SDEs).
+I implemented both **Euler-Maruyama** and **Milstein** schemes to compare their convergence rates.
 
-Currently implements the **Euler-Maruyama scheme** with plans to add Milstein method.
+## Mathematical Background
 
-## Description
-
-The Euler-Maruyama scheme is a numerical method for solving SDEs of the form:
-
-```math
-dX(t) = a(X(t), t) dt + b(X(t), t) dW(t)
-```
-
-where:
-- **a(X, t)** is the drift term
-- **b(X, t)** is the diffusion term
-- **W(t)** is a standard Brownian motion (Wiener process)
-
-It's basically the stochastic version of Euler's method
-
-## The Algorithm
-
-The Euler-Maruyama discretization:
+The goal was to solve Itô SDEs:
 
 ```math
-X_{n+1} = X_n + a(X_n, t_n) Δt + b(X_n, t_n) ΔW_n
+dX_t = a(X_t, t)dt + b(X_t, t)dW_t
 ```
 
-where Δt is the time step and ΔW_n ~ N(0, Δt) are Brownian increments
+Where:
+- a(X, t): Drift
+- b(X, t): Diffusion
+- W_t: Brownian motion
 
-## Project Structure
+### Methods Implemented
 
-```
-sde-solver/
-├── src/sde-solver
-│   ├── euler_maruyama.py    # Main solver implementation
-│   └── milstein.py          # Milstein scheme (TODO)
-├── examples/
-│   ├── black_scholes.py     # Stock price modeling
-│   └── interest_rates.py    # Interest rate modeling
-├── tests/
-│   └── test_euler_maruyama.py
-├── run_all.py               # Run all examples
-└── pyproject.toml
+**1. Euler-Maruyama**
+Standard method (Order 0.5). Simple to implement but converges slowly.
+```math
+X_{n+1} = X_n + a(X_n)\Delta t + b(X_n)\Delta W_n
 ```
 
-## Installation
-
-In order to run examples and tests, simply use [uv](https://docs.astral.sh/uv/).
-
-It can be installed using:
-```bash
-pipx install uv
+**2. Milstein Scheme**
+I added this one to get better precision (Order 1.0). It uses the derivative of the diffusion term.
+```math
+X_{n+1} = X_n + a(X_n)\Delta t + b(X_n)\Delta W_n + \frac{1}{2}b(X_n)b'(X_n)((\Delta W_n)^2 - \Delta t)
 ```
-
-To install the `sde-solver` package, use:
-```bash
-pip install .
-```
-
-
-## Usage
-
-### Quick Start
-
-Run all examples at once:
-```bash
-uv run run_all.py
-```
-
-### Individual Examples
-
-Black-Scholes stock price model:
-```bash
-uv run examples/black_scholes.py
-```
-
-Interest rate model:
-```bash
-uv run examples/interest_rates.py
-```
-
-### Using in Your Code
-
-```python
-from sde_solver.euler_maruyama import euler_maruyama
-
-# Define drift and diffusion
-def drift(X, t):
-    return mu * X
-
-def diffusion(X, t):
-    return sigma * X
-
-# Solve the SDE
-t, X = euler_maruyama(X0=1.0, a=drift, b=diffusion, T=1.0, N=1000, M=5)
-```
-
-### Run Tests
-
-```bash
-uv run pytest
-```
-
-## Examples Included
-
-### 1. Black-Scholes Model (`examples/black_scholes.py`)
-Geometric Brownian Motion for stock prices:
-```
-dS(t) = μ S(t) dt + σ S(t) dW(t)
-```
-
-### 2. Interest Rate Model (`examples/interest_rates.py`)
-Ornstein-Uhlenbeck mean-reverting process:
-```
-dX(t) = θ(μ - X(t)) dt + σ dW(t)
-```
-
-### 3. Convergence Analysis (`run_all.py`)
-Testing convergence rate O(√Δt)
 
 ## Results
 
-The program makes three plots:
-- geometric_brownian_motion.png
-- ornstein_uhlenbeck_process.png
-- euler_maruyama_convergence.png
+I compared both methods on a Geometric Brownian Motion.
+As expected, Milstein is much better when we reduce the step size (slope is steeper in the log-log plot).
 
-## Theory
+![Convergence Plot](assets/milstein_convergence.png)
 
-### Convergence
-Euler-Maruyama has:
-- **Strong convergence**: order 0.5
-- **Weak convergence**: order 1.0
+### Examples
 
-Tested in example 3
+I also tested the solver on:
+1. **Black-Scholes Model** (Stock prices)
+2. **Ornstein-Uhlenbeck** (Interest rates)
 
-### Applications
-- Finance (option pricing)
-- Physics (Brownian motion)
-- Biology (population models)
+## How to run
 
-## Parameters
+I used `uv` for dependency management because it's faster, but standard pip works too.
 
-```python
-euler_maruyama(X0, a, b, T, N, M=1)
+```bash
+# Install dependencies
+uv sync  # or 'pip install .'
+
+# Run everything
+uv run run_all.py # or 'python run_all.py'
 ```
 
-- X0: initial condition
-- a: drift function a(X, t)
-- b: diffusion function b(X, t)
-- T: final time
-- N: number of time steps
-- M: number of paths (default 1)
+## Difficulties Encountered
 
-## References
+- Getting the Milstein scheme to work was tricky because of the derivative term.
+- I had some issues with the random seed for the convergence test (needed to reset it for fair comparison).
 
-- Kloeden & Platen - "Numerical Solution of Stochastic Differential Equations with Jumps in Finance"
-- Wikipedia article on the Euler-Maruyama method
+
+## Future Improvements
+
+- [ ] Add Runge-Kutta stochastic schemes (Higher Order).
+- [ ] Optimize the loops with Numba (currently pure NumPy).
+- [ ] Implement Jump-Diffusion processes (Merton Model).
+
 
 
 
