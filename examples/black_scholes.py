@@ -14,8 +14,6 @@ from sde_solver.euler_maruyama import euler_maruyama
 def run_black_scholes_simulation():
     """
     Example: Geometric Brownian Motion (Black-Scholes model)
-
-    This is the famous model used in finance!
     dS(t) = μ S(t) dt + σ S(t) dW(t)
 
     where μ is the drift rate and σ is the volatility
@@ -26,30 +24,24 @@ def run_black_scholes_simulation():
 
     # Parameters - using typical stock market values
     S0 = 100.0
-    mu = 0.1  # 10% return
-    sigma = 0.2  # 20% volatility
+    mu = 0.1  
+    sigma = 0.2  
     T = 1.0
     N = 1000
     M = 5
-    
-    # TODO: maybe load parameters from a config file later?
 
-    # drift and diffusion functions
     def drift(S, t):
         return mu * S
 
     def diffusion(S, t):
         return sigma * S
 
-    # simulate
     t, S = euler_maruyama(S0, drift, diffusion, T, N, M)
 
-    # Exact solution for comparison (from textbook p.342)
     np.random.seed(42)
     W = np.cumsum(np.random.randn(N) * np.sqrt(T / N))
     S_exact = S0 * np.exp((mu - 0.5 * sigma**2) * t + sigma * np.concatenate(([0], W)))
 
-    # plotting
     plt.figure(figsize=(12, 5))
 
     plt.subplot(1, 2, 1)
@@ -71,12 +63,10 @@ def run_black_scholes_simulation():
     plt.grid(True, alpha=0.3)
 
     plt.tight_layout()
-    try:
-        plt.savefig("geometric_brownian_motion.png", dpi=150)
-        print("\nPlot saved: geometric_brownian_motion.png")
-    except Exception as e:
-        # sometimes saving fails on weird environments; not a big deal for class
-        print("(couldn't save GBM plot)", e)
+
+    plt.savefig("geometric_brownian_motion.png", dpi=150)
+    print("\nPlot saved: geometric_brownian_motion.png")
+
     plt.show()
 
     return t, S
