@@ -12,7 +12,7 @@ where:
 
 import numpy as np
 
-DEBUG = False  # quick flag for printing stuff while debugging
+DEBUG = False  
 
 
 def euler_maruyama(X0, a, b, T, N, M=1):
@@ -41,5 +41,4 @@ def euler_maruyama(X0, a, b, T, N, M=1):
     # Main loop
     for i in range(N):
         X[:, i + 1] = X[:, i] + a(X[:, i], t[i]) * dt + b(X[:, i], t[i]) * dW[:, i]
-
     return t, X
