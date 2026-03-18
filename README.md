@@ -55,12 +55,6 @@ uv sync  # or 'pip install .'
 uv run run_all.py # or 'python run_all.py'
 ```
 
-## Difficulties Encountered
-
-- Getting the Milstein scheme to work was tricky because of the derivative term.
-- I had some issues with the random seed for the convergence test (needed to reset it for fair comparison).
-
-
 ## Future Improvements
 
 - [ ] Add Runge-Kutta stochastic schemes (Higher Order).
